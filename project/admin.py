@@ -36,6 +36,19 @@ def login(response:Response,form_data:login_,is_logged:bool=Depends(is_logged_in
         return {"access_token":access_token, "token_type":"bearer"}
     else:
         exchand(401,"Incorrect username or password")
+    
+
+@router.get("/logout")
+def logout(response:Response):
+    response.set_cookie(key="Authorization", value="",expires=0)
+    return {"message": "Token deleted successfully"}
+
+
+@router.get("/users",response_model=list[Admin_Add_Schema])
+def users():
+    all_users_get=db.session.query(Admin).all()
+    return all_users_get
+
 
 @router.post("/create_login_code")
 def create_login_code(logincode:create_login_code_schema):
