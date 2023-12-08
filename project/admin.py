@@ -1,11 +1,23 @@
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from datetime import timedelta
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Response, Request, Form
 from .schemas import *
 from fastapi_sqlalchemy import db
 from .models import Admin, Login_code
 from .bearer import*
 
 router=APIRouter(prefix="/admin")
+
+
+templates = Jinja2Templates(directory="templates")
+
+
+@router.get("/administration", response_class=HTMLResponse)
+def read_posts(request: Request):
+    return templates.TemplateResponse("blog.html", {"request": request, "posts": "Hello"})
+
 
 @router.post("/signup",response_model=Admin_Add_Schema)
 def signup(user:Admin_Show_Schema):
@@ -24,15 +36,16 @@ def signup(user:Admin_Show_Schema):
         db.session.commit()
         return user
 
-@router.post("/token")
-def login(response:Response,form_data:login_,is_logged:bool=Depends(is_logged_in)):
+@router.post("/token/{username}/{password}")
+def login(response:Response,username:str,password:str,is_logged:bool=Depends(is_logged_in)):
     if is_logged:
         exchand(403,"You are already logged in. Please log out before logging in again.")
-    user=db.session.query(Admin).filter_by(username=form_data.username).first()
+    user=db.session.query(Admin).filter_by(username=username).first()
+    print('-->>>>>>',user)
     if user is None:
         exchand(401,"Incorrect username or password")
-    if verify_password_(form_data.password,user):
-        access_token=create_access_token(response,data={"sub":form_data.username},expires_delta=timedelta(hours=10))
+    if verify_password_(password,user):
+        access_token=create_access_token(response,data={"sub":username},expires_delta=timedelta(hours=10))
         return {"access_token":access_token, "token_type":"bearer"}
     else:
         exchand(401,"Incorrect username or password")
