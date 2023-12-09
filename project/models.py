@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, Time
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -22,4 +22,5 @@ class Login_code(Base):
     __tablename__="login_code"
     id = Column(Integer, primary_key=True,autoincrement=True)
     login_code=Column(String,nullable=False)
-    is_active=Column(Boolean, default=False)
+    expired_time=Column(Time,nullable=False)
+    word_box=Column(Integer,nullable=False)

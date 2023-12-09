@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from  datetime import time
 class Admin_Add_Schema(BaseModel):
     id:int
     username:str
@@ -15,6 +15,12 @@ class login_(BaseModel):
 
 class create_login_code_schema(BaseModel):
     login_code:int
+    one:bool
+    two:bool
+    three:bool
+    four:bool
+    five:bool
+    time:time
 
 class enter_to_test(BaseModel):
     name:str
@@ -31,6 +37,13 @@ class accept_score_schema(BaseModel):
     score:int
 
 class show_to_test(BaseModel):
+    id:int
+    name:str
+    surname:str
+    score:int
+    word_box:int
+
+class Teachers_result(BaseModel):
     id:int
     name:str
     surname:str

@@ -1,24 +1,38 @@
+from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from .schemas import enter_to_test, show_to_test, accept_score_schema
 from fastapi_sqlalchemy import db
 from .models import Students, Login_code
 
+
 router=APIRouter(prefix="/user")
+
 
 @router.post("/enter_to_test",response_model=show_to_test)
 def enter_to_test(user_schema:enter_to_test):
     check_login_code=db.session.query(Login_code).first()
-    if check_login_code.login_code==user_schema.login_code:
-        new_teacher=Students(
-            name=user_schema.name,
-            surname=user_schema.surname,
-            score=0
-        )
-        db.session.add(new_teacher)
-        db.session.commit()
-        return new_teacher
+    if check_login_code:
+        if check_login_code.login_code==user_schema.login_code and datetime.now().time() < check_login_code.expired_time:
+            new_teacher=Students(
+                name=user_schema.name,
+                surname=user_schema.surname,
+                score=0
+            )
+            db.session.add(new_teacher)
+            db.session.commit()
+            new_teacher_with_group = show_to_test(
+                id=new_teacher.id,
+                name=new_teacher.name,
+                surname=new_teacher.surname,
+                score=new_teacher.score,
+                word_box=check_login_code.word_box,
+            )
+            return new_teacher_with_group
+        else:
+            raise HTTPException(status_code=404,detail="Invalid login code")
     else:
-        raise HTTPException(status_code=404,detail="Invalid login code")
+        raise HTTPException(status_code=404,detail="No exam found now")
+
 
 @router.put("/accept_score",response_model=show_to_test)
 def accept_score(user:accept_score_schema):

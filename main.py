@@ -10,6 +10,7 @@ app=FastAPI()
 app.include_router(admin_router)
 app.include_router(user_router)
 
+
 load_dotenv('.env')
 
 app.add_middleware(DBSessionMiddleware, db_url=os.environ['DATABASE_URL'])
