@@ -14,13 +14,10 @@ class login_(BaseModel):
     password:str
 
 class create_login_code_schema(BaseModel):
-    login_code:int
-    one:bool
-    two:bool
-    three:bool
-    four:bool
-    five:bool
-    time:time
+    login_code:str
+    word_group:int
+    hour:int
+    minute:int
 
 class enter_to_test(BaseModel):
     name:str
@@ -42,6 +39,7 @@ class show_to_test(BaseModel):
     surname:str
     score:int
     word_box:int
+
 
 class Teachers_result(BaseModel):
     id:int

@@ -1,5 +1,5 @@
 from datetime import timedelta
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Response, status
 from .schemas import *
 from fastapi_sqlalchemy import db
 from .models import Admin, Login_code, Students
@@ -51,26 +51,33 @@ def users():
     return all_users_get
 
 
+@router.get("/check_lg")
+def check_lg():
+    check_login_code=db.session.query(Login_code).first()
+    if check_login_code is None:
+        raise HTTPException(status_code=404, detail=True)
+    return {"detail":True}, status.HTTP_200_OK
+
+
 @router.post("/create_login_code")
 def create_login_code(logincode:create_login_code_schema):
     check_login_code=db.session.query(Login_code).first()
-    words_boxes=[logincode.one, logincode.two, logincode.three, logincode.four, logincode.five]
-    counter=1000
-    needed_box=0
-    for i in words_boxes:
-        if i is True:
-            needed_box=counter
-        counter+=1000
-    time2=datetime.now()
-    q=time2+timedelta(hours=logincode.time.hour, 
-                      minutes=logincode.time.minute, 
-                      seconds=logincode.time.second)
+    # time2=datetime.now()
+    # q=time2+timedelta(hours=logincode.hour, 
+    #                   minutes=logincode.minute)
+    exam_time=time(logincode.hour,logincode.minute)
+    print(exam_time)
+    print(type(exam_time))
     if check_login_code is None:
-        new_login_code=Login_code(login_code=logincode.login_code, expired_time=q, word_box=needed_box)
+        new_login_code=Login_code(login_code=logincode.login_code, expired_time=exam_time, word_box=logincode.word_group)
         db.session.add(new_login_code)
         db.session.commit()
-        return {"detail":"success",'Word_boxes':needed_box}
-    return {"detail":"U have a login code before. Use it or delete and create again."}
+        return {"detail":"success",
+                'login_code':logincode.login_code,
+                'Word_boxes':logincode.word_group,
+                'expiring time':exam_time
+                }
+    raise HTTPException(status_code=400, detail="U have a login code before. Use it or delete and create again.")
 
 
 @router.delete("/delete_login_code")
