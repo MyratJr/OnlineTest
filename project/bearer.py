@@ -1,3 +1,4 @@
+from fastapi_sqlalchemy import db
 from pathlib import Path
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import cm
@@ -7,6 +8,7 @@ from passlib.context import CryptContext
 from fastapi import HTTPException, Request
 import jwt
 from dotenv import load_dotenv
+from .models import Login_code
 
 load_dotenv('.env')
 
@@ -55,13 +57,14 @@ def create_access_token(response,data:dict,expires_delta:timedelta):
     return "Bearer "+encoded_jwt
 
 def pdf_maker(items):
+    check_login_code=db.session.query(Login_code).first()    
     c=canvas.Canvas("static/Exam_results.pdf")
     c.setFont("Helvetica", 22)
     c.setFillColorRGB(0, 0, 255)
-    c.drawString(160,800, "Mugallymlaryň synag netijesi")
+    c.drawString(160,800, "Mugallymlaryn synag netijesi")
     c.drawImage("D:\OnlineTest\images\logo.png", 0.3 * cm, 27 * cm, width=2.5 * cm, height=2.5 * cm)
     c.setFont("Helvetica", 12)
-    c.setFillColorRGB(255, 0, 0)    
+    c.setFillColorRGB(0, 0, 255)    
     c.drawString(100,760, "T/b")
     c.drawString(140,760, "Ady")
     c.drawString(290,760, "Familiýasy")
@@ -90,5 +93,14 @@ def pdf_maker(items):
         c.drawString(100,b1-5,"_____________________________________________________________" )
         b1=b1-23
         counter+=1
+    c.setFont("Helvetica", 12)
+    c.setFillColorRGB(0, 0, 0)
+    c.drawString(40,70, "Synag wagty")
+    c.drawString(50,50, f"{check_login_code.expired_time}")
+    c.drawString(250,70, "Sözler toplumy")
+    c.drawString(274,50, f"{check_login_code.word_box}")
+    c.drawString(460,70, "PDF ýüklenen wagty")
+    wagt=datetime.now()
+    c.drawString(475,50, f"{wagt.day}.{wagt.month}.{wagt.day} / {wagt.hour}:{wagt.minute}")
     c.save()
     return c._filename

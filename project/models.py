@@ -16,7 +16,7 @@ class Students(Base):
     id = Column(Integer, primary_key=True,autoincrement=True)
     name = Column(String, nullable=False)
     surname = Column(String, nullable=False)
-    Login_code=Column(String,default=0)
+    login_code=Column(String,default=0)
     score=Column(Integer)
 
 class Login_code(Base):

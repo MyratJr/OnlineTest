@@ -16,6 +16,7 @@ def enter_to_test(user_schema:enter_to_test):
             new_teacher=Students(
                 name=user_schema.name,
                 surname=user_schema.surname,
+                login_code=user_schema.login_code,
                 score=0
             )
             db.session.add(new_teacher)
