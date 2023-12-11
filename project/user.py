@@ -20,14 +20,6 @@ def enter_to_test(user_schema:enter_to_test):
             )
             db.session.add(new_teacher)
             db.session.commit()
-            # new_teacher_with_group = show_to_test(
-            #     id=new_teacher.id,
-            #     name=new_teacher.name,
-            #     surname=new_teacher.surname,
-            #     score=new_teacher.score,
-            #     word_box=check_login_code.word_box,
-            # )
-
             return {
                 "id":new_teacher.id,
                 "time":check_login_code.expired_time,

@@ -1,6 +1,7 @@
 from datetime import timedelta
 from fastapi import APIRouter, Depends, Response, status
 from .schemas import *
+from fastapi.responses import JSONResponse
 from fastapi_sqlalchemy import db
 from .models import Admin, Login_code, Students
 from .bearer import*
@@ -91,3 +92,12 @@ def delele_login_code():
 def results():
     all_users_get=db.session.query(Students).all()
     return all_users_get
+
+@router.get("/get_result_pdf")
+def get_result_pdf():
+    pdf=pdf_maker(db.session.query(Students).all())
+    pdf_file_address = f"http://192.168.12.180:8000/{pdf}"
+    return JSONResponse(
+        content={"pdf_address": pdf_file_address},
+        status_code=200,
+    )
