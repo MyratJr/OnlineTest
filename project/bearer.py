@@ -101,6 +101,6 @@ def pdf_maker(items):
     c.drawString(274,50, f"{check_login_code.word_box}")
     c.drawString(460,70, "PDF ýüklenen wagty")
     wagt=datetime.now()
-    c.drawString(475,50, f"{wagt.day}.{wagt.month}.{wagt.day} / {wagt.hour}:{wagt.minute}")
+    c.drawString(470,50, f"{wagt.day}.{wagt.month}.{wagt.year} / {wagt.hour}:{wagt.minute}")
     c.save()
     return c._filename

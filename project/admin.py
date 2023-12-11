@@ -5,6 +5,10 @@ from fastapi.responses import JSONResponse
 from fastapi_sqlalchemy import db
 from .models import Admin, Login_code, Students
 from .bearer import*
+import socket
+
+
+ip_address = socket.gethostbyname(socket.gethostname())
 
 router=APIRouter(prefix="/admin")
 
@@ -63,12 +67,7 @@ def check_lg():
 @router.post("/create_login_code")
 def create_login_code(logincode:create_login_code_schema):
     check_login_code=db.session.query(Login_code).first()
-    # time2=datetime.now()
-    # q=time2+timedelta(hours=logincode.hour, 
-    #                   minutes=logincode.minute)
     exam_time=time(logincode.hour,logincode.minute)
-    print(exam_time)
-    print(type(exam_time))
     if check_login_code is None:
         new_login_code=Login_code(login_code=logincode.login_code, expired_time=exam_time, word_box=logincode.word_group)
         db.session.add(new_login_code)
@@ -81,9 +80,22 @@ def create_login_code(logincode:create_login_code_schema):
     raise HTTPException(status_code=400, detail="U have a login code before. Use it or delete and create again.")
 
 
+# 172.16.0.76
+# Admin123
+# ssh root@172.16.0.76
+# tmux new -s a
+# tmux a
+# nano project/admin.py
+# ctrl x, y
+# ctrl b, d
+
+
 @router.delete("/delete_login_code")
 def delele_login_code():
     check_login_code=db.session.query(Login_code).first()
+    all_users_get=db.session.query(Students).all()
+    for i in all_users_get:
+        db.session.delete(i)
     db.session.delete(check_login_code)
     db.session.commit()
     return {"detail":"success"}
@@ -95,8 +107,8 @@ def results():
 
 @router.get("/get_result_pdf")
 def get_result_pdf():
-    pdf=pdf_maker(db.session.query(Students).all())
-    pdf_file_address = f"http://192.168.12.180:8000/{pdf}"
+    pdf=pdf_maker(db.session.query(Students).order_by(Students.score).all())
+    pdf_file_address = f"{ip_address}:8000/{pdf}"
     return JSONResponse(
         content={"pdf_address": pdf_file_address},
         status_code=200,
