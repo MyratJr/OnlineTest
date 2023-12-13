@@ -104,7 +104,7 @@ def delele_login_code(id:int):
 def logincode():
     return [db.session.query(Login_code).all()]
 
-
+print(1)
 @router.put("/update_login_code")
 def update_login_code(payload:update_login_code):
     check_login_code=db.session.query(Login_code).filter_by(id=payload.id).first()
