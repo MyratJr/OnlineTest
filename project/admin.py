@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, status, HTTPException
 from .schemas import *
 from fastapi.responses import JSONResponse
@@ -48,7 +49,7 @@ def delele_login_code():
     return {"detail":"success"}
 
 
-@router.get("/results",response_model=list[Teachers_result])
+@router.get("/results",response_model=List[Teachers_result])
 def results():
     all_users_get=db.session.query(Students).all()
     return all_users_get
