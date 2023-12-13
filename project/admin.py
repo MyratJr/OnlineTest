@@ -6,6 +6,7 @@ from fastapi_sqlalchemy import db
 from .models import Admin, Login_code, Students
 from .bearer import*
 import socket
+from typing import List
 
 
 ip_address = socket.gethostbyname(socket.gethostname())
@@ -52,7 +53,7 @@ def logout(response:Response):
     return {"message": "Token deleted successfully"}
 
 
-@router.get("/users",response_model=list[Admin_Add_Schema])
+@router.get("/users",response_model=List[Admin_Add_Schema])
 def users():
     all_users_get=db.session.query(Admin).all()
     return all_users_get
@@ -116,7 +117,7 @@ def update_login_code(payload:update_login_code):
     db.session.commit()
     return payload
 
-@router.get("/results",response_model=list[Teachers_result])
+@router.get("/results",response_model=List[Teachers_result])
 def results():
     all_users_get=db.session.query(Students).all()
     return all_users_get
