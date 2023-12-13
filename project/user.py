@@ -34,8 +34,8 @@ def enter_to_test(user_schema:enter_to_test):
 @router.put("/accept_score")
 def accept_score(user:accept_score_schema):
     update_score=db.session.query(Students).filter_by(id=user.id).first()
-    if user is None:
-        raise HTTPException(401,"Incorrect username or password")
+    if update_score is None:
+        raise HTTPException(404,"No user found")
     update_score.score=user.score
     db.session.commit()
-    return {"detail":"success"}
+    return {"detail":"Teacher score updated"}
