@@ -1,6 +1,5 @@
-from datetime import datetime
 from fastapi import APIRouter, HTTPException
-from .schemas import enter_to_test, show_to_test, accept_score_schema
+from .schemas import enter_to_test
 from fastapi_sqlalchemy import db
 from .models import Students, Login_code
 
@@ -30,13 +29,3 @@ def enter_to_test(user_schema:enter_to_test):
             raise HTTPException(status_code=404,detail="Invalid login code")
     else:
         raise HTTPException(status_code=404,detail="No exam found now")
-
-
-@router.put("/accept_score")
-def accept_score(user:accept_score_schema):
-    update_score=db.session.query(Students).filter_by(id=user.id).first()
-    if user is None:
-        raise HTTPException(401,"Incorrect username or password")
-    update_score.score=user.score
-    db.session.commit()
-    return {"detail":"success"}
