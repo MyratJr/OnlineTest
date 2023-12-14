@@ -85,7 +85,7 @@ def create_login_code(logincode:create_login_code_schema):
             is_active=logincode.is_active)
         db.session.add(new_login_code)
         db.session.commit()
-        return {"detail":"success",
+        return {"id":new_login_code.id,
                 'login_code':logincode.login_code,
                 'Word_boxes':logincode.word_group,
                 'expiring time':exam_time,
