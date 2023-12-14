@@ -70,7 +70,7 @@ def pdf_maker(items):
     c.setFont("Helvetica", 22)
     c.setFillColorRGB(0, 0, 255)
     c.drawString(160,800, "Mugallymlaryn synag netijesi")
-    c.drawImage("images\logo.png", 0.3 * cm, 27 * cm, width=2.5 * cm, height=2.5 * cm)
+    c.drawImage("images/logo.png", 0.3 * cm, 27 * cm, width=2.5 * cm, height=2.5 * cm)
     c.setFont("Helvetica", 12)
     c.setFillColorRGB(0, 0, 255)    
     c.drawString(100,760, "T/b")
