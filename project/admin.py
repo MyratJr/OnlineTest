@@ -131,6 +131,13 @@ def update_login_code(payload:update_login_code):
     db.session.commit()
     return payload
 
+
+@router.put("change_active/{id}/{status}")
+def change_active(id:int,status:bool):
+    check_login_code=db.session.query(Login_code).filter_by(id=id).first()
+    check_login_code.is_active=status
+    return status
+
 @router.get("/results",response_model=List[Teachers_result])
 def results():
     all_users_get=db.session.query(Students).all()
