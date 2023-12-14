@@ -104,7 +104,7 @@ def pdf_maker(items):
     c.setFont("Helvetica", 12)
     c.setFillColorRGB(0, 0, 0)
     c.drawString(40,70, "Synag wagty")
-    gelmesin1=check_login_code.expired_time.hour+5
+    gelmesin1=check_login_code.expired_time.hour
     gelsin1=check_login_code.expired_time.minute
     if gelmesin1<10:
         gelmesin1=f'0{gelmesin1}'
@@ -115,12 +115,12 @@ def pdf_maker(items):
     c.drawString(274,50, f"{check_login_code.word_box}")
     c.drawString(460,70, "PDF ýüklenen wagty")
     wagt=datetime.now()
-    gelmesin=wagt.hour
+    gelmesin=wagt.hour+5
     gelsin=wagt.minute
-    if wagt.hour<10:
-        gelmesin=f'0{wagt.hour}'
-    if wagt.minute<10:
-        gelsin=f'0{wagt.minute}'
+    if gelmesin<10:
+        gelmesin=f'0{gelmesin}'
+    if gelsin<10:
+        gelsin=f'0{gelsin}'
     c.drawString(465,50, f"{wagt.day}.{wagt.month}.{wagt.year} / {gelmesin}:{gelsin}")
     c.save()
     return c._filename
