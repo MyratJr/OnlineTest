@@ -138,9 +138,8 @@ def get_result_pdf(id:int):
     exam=db.session.query(Login_code).filter_by(id=id).first()
     if exam is not None:
         pdf=pdf_maker(db.session.query(Students).filter_by(login_code=exam.login_code).order_by(Students.score).all(),exam)
-        pdf_file_address = f"{pdf}"
         return JSONResponse(
-            content={"pdf_address": pdf_file_address},
+            content={"pdf_address": pdf},
             status_code=200,
         )
     exchand(404, "No exam found")
