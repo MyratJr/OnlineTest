@@ -55,12 +55,11 @@ def verify_password_(password,user):
         return False
 
 
-def create_access_token(response,data:dict,expires_delta:timedelta):
+def create_access_token(data:dict,expires_delta:timedelta):
     to_encode=data.copy()
     expire=datetime.utcnow()+expires_delta
     to_encode.update({'exp':expire})
     encoded_jwt=jwt.encode(to_encode, os.environ['JWT_SECRET_KEY'], os.environ['ALGORITHM'])
-    response.set_cookie(key="Authorization", value="Bearer "+encoded_jwt)
     return "Bearer "+encoded_jwt
 
 

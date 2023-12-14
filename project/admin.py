@@ -40,12 +40,12 @@ def login(response:Response,data:login_,is_logged:bool=Depends(is_logged_in)):
         exchand(403,"You are already logged in. Please log out before logging in again.")
     user=db.session.query(Admin).filter_by(username=data.username).first()
     if user is None:
-        exchand(401,"Incorrect username or password")
+        exchand(401,"Incorrect username")
     if verify_password_(data.password,user):
         access_token=create_access_token(response,data={"sub":data.username},expires_delta=timedelta(hours=10))
         return {"access_token":access_token, "token_type":"bearer"}
     else:
-        exchand(401,"Incorrect username or password")
+        exchand(401,"Incorrect password")
     
 
 @router.get("/logout")
@@ -70,7 +70,7 @@ def check_lg():
 
 @router.get("/all_login_codes")
 def all_login_codes():
-    return [db.session.query(Login_code).all()]
+    return db.session.query(Login_code).all()
     
 
 @router.post("/create_login_code")
