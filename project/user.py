@@ -10,7 +10,7 @@ router=APIRouter(prefix="/user")
 @router.post("/enter_to_test")
 def enter_to_test(user_schema:enter_to_test):
     check_login_code=db.session.query(Login_code).filter_by(login_code=user_schema.login_code).first()
-    if check_login_code:
+    if check_login_code and check_login_code.is_active:
         new_teacher=Students(
             name=user_schema.name,
             surname=user_schema.surname,

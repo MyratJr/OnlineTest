@@ -94,21 +94,9 @@ def create_login_code(logincode:create_login_code_schema):
     exchand(400, f"You have a login code with '{logincode.login_code}' before.")
 
 
-# @router.delete("/delete_login_code/{id}")
-# def delele_login_code(id:int):
-#     check_login_code=db.session.query(Login_code).filter_by(id=id).first()
-#     if check_login_code is None:
-#         exchand(404, "No login code found")
-#     get_teachers=db.session.query(Students).filter_by(login_code=check_login_code.login_code)
-#     for i in get_teachers:
-#         db.session.delete(i)
-#     db.session.delete(check_login_code)
-#     db.session.commit()
-#     return {"detail":"Login code and related teachers deleted"}
-
-@router.delete("/delete_login_code")
-def delele_login_code():
-    check_login_code=db.session.query(Login_code).first()
+@router.delete("/delete_login_code/{id}")
+def delele_login_code(id:int):
+    check_login_code=db.session.query(Login_code).filter_by(id=id).first()
     if check_login_code is None:
         exchand(404, "No login code found")
     get_teachers=db.session.query(Students).filter_by(login_code=check_login_code.login_code)
