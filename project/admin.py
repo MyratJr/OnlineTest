@@ -162,7 +162,7 @@ def each_exam_teachers(id:int):
     if login_code1 is not None:
         get_teachers=db.session.query(Students).filter_by(login_code=login_code1.login_code).all()
         for i in get_teachers:
-            print(type(i.registered_time))
+            i.salam=12
         return get_teachers
     else:
         exchand(404, "No exam found")
