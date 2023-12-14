@@ -65,7 +65,8 @@ def create_access_token(response,data:dict,expires_delta:timedelta):
 
 
 def pdf_maker(items):
-    check_login_code=db.session.query(Login_code).first()    
+    check_login_code=db.session.query(Login_code).first()
+    print(12)    
     c=canvas.Canvas("static/Exam_results.pdf")
     c.setFont("Helvetica", 22)
     c.setFillColorRGB(0, 0, 255)
