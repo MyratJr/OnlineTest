@@ -133,14 +133,17 @@ def results():
     return all_users_get
 
 
-@router.get("/get_result_pdf")
-def get_result_pdf():
-    pdf=pdf_maker(db.session.query(Students).order_by(Students.score).all())
-    pdf_file_address = f"{pdf}"
-    return JSONResponse(
-        content={"pdf_address": pdf_file_address},
-        status_code=200,
-    )
+@router.get("/get_result_pdf/{id}")
+def get_result_pdf(id:int):
+    exam=db.session.query(Login_code).filter_by(id=id).first()
+    if exam is not None:
+        pdf=pdf_maker(db.session.query(Students).filter_by(login_code=exam.login_code).order_by(Students.score).all(),exam)
+        pdf_file_address = f"{pdf}"
+        return JSONResponse(
+            content={"pdf_address": pdf_file_address},
+            status_code=200,
+        )
+    exchand(404, "No exam found")
 
 
 @router.delete("/delete_user/{id}")
