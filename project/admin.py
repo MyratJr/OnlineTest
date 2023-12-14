@@ -145,8 +145,8 @@ def deleteuser(id:int):
     return {"detail":"Teacher deleted"}
 
 
-# @router.get("/e_e_t/{id}")
-# def each_exam_teachers(id:int):
-#     login_code1=db.session.query(Login_code).filter_by(id=id).first()
-#     get_teachers=db.session.query(Students).filter_by(login_code=login_code1.login_code).all()
-#     return get_teachers
+@router.get("/e_e_t/{id}")
+def each_exam_teachers(id:int):
+    login_code1=db.session.query(Login_code).filter_by(id=id).first()
+    get_teachers=db.session.query(Students).filter_by(login_code=login_code1.login_code).all()
+    return get_teachers
