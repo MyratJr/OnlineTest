@@ -109,7 +109,7 @@ def pdf_maker(items):
     if check_login_code.expired_time.hour<10:
         gelmesin1=f'0{check_login_code.expired_time.hour}'
     if check_login_code.expired_time.minute<10:
-        gelmesin1=f'0{check_login_code.expired_time.minute}'
+        gelsin1=f'0{check_login_code.expired_time.minute}'
     c.drawString(50,50, f"{gelmesin1}:{gelsin1}")
     c.drawString(250,70, "Sözler toplumy")
     c.drawString(274,50, f"{check_login_code.word_box}")
