@@ -104,12 +104,12 @@ def pdf_maker(items):
     c.setFont("Helvetica", 12)
     c.setFillColorRGB(0, 0, 0)
     c.drawString(40,70, "Synag wagty")
-    gelmesin1=check_login_code.expired_time.hour
+    gelmesin1=check_login_code.expired_time.hour+5
     gelsin1=check_login_code.expired_time.minute
-    if check_login_code.expired_time.hour<10:
-        gelmesin1=f'0{check_login_code.expired_time.hour}'
-    if check_login_code.expired_time.minute<10:
-        gelsin1=f'0{check_login_code.expired_time.minute}'
+    if gelmesin1<10:
+        gelmesin1=f'0{gelmesin1}'
+    if gelsin1<10:
+        gelsin1=f'0{gelsin1}'
     c.drawString(50,50, f"{gelmesin1}:{gelsin1}")
     c.drawString(250,70, "Sözler toplumy")
     c.drawString(274,50, f"{check_login_code.word_box}")
