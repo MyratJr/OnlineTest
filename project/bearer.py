@@ -65,7 +65,7 @@ def create_access_token(data:dict,expires_delta:timedelta):
 
 def pdf_maker(items,exam):
     check_login_code=exam
-    c=canvas.Canvas("static/{exam.login_code}_exam.pdf")
+    c=canvas.Canvas(f"static/{exam.login_code}_exam.pdf")
     c.setFont("Helvetica", 22)
     c.setFillColorRGB(0, 0, 255)
     c.drawString(160,800, "Mugallymlaryn synag netijesi")
