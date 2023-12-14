@@ -143,3 +143,10 @@ def deleteuser(id:int):
     db.session.delete(update_score)
     db.session.commit()
     return {"detail":"Teacher deleted"}
+
+
+@router.get("e_e_t/{id}")
+def each_exam_teachers(id:int):
+    login_code=db.session.query(Login_code).filter_by(id=id).first()
+    get_teachers=db.session.query(Students).filter_by(login_code=login_code.login_code)
+    return get_teachers

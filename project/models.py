@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, Time
 from sqlalchemy.ext.declarative import declarative_base
-
+from datetime import time
 
 Base = declarative_base()
 
@@ -21,6 +21,7 @@ class Students(Base):
     surname = Column(String, nullable=False)
     login_code=Column(String,default=0)
     score=Column(Integer)
+    registered_time=Column(Time, default=time(13, 00))
 
 
 class Login_code(Base):
