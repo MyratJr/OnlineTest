@@ -108,7 +108,7 @@ def delele_login_code(id:int):
 
 
 @router.put("/update_login_code")
-def update_login_code(payload:update_login_code):
+def update_login_code_(payload:update_login_code):
     check_login_code=db.session.query(Login_code).filter_by(id=payload.id).first()
     if check_login_code is None:
         exchand(404, "No login code found")
@@ -156,5 +156,8 @@ def deleteuser(id:int):
 @router.get("/e_e_t/{id}")
 def each_exam_teachers(id:int):
     login_code1=db.session.query(Login_code).filter_by(id=id).first()
-    get_teachers=db.session.query(Students).filter_by(login_code=login_code1.login_code).all()
-    return get_teachers
+    if login_code1 is not None:
+        get_teachers=db.session.query(Students).filter_by(login_code=login_code1.login_code).all()
+        return get_teachers
+    else:
+        exchand(404, "No exam found")
