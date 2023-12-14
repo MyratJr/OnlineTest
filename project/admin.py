@@ -69,7 +69,8 @@ def check_lg():
 
 
 @router.get("/all_login_codes")
-def all_login_codes():
+def all_login_codes(request:Request):
+    print(request.client.host)
     return db.session.query(Login_code).all()
     
 
@@ -128,7 +129,7 @@ def results():
 @router.get("/get_result_pdf")
 def get_result_pdf():
     pdf=pdf_maker(db.session.query(Students).order_by(Students.score).all())
-    pdf_file_address = f"{ip_address}:8000/{pdf}"
+    pdf_file_address = f"{pdf}"
     return JSONResponse(
         content={"pdf_address": pdf_file_address},
         status_code=200,
