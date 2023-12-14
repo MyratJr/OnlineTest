@@ -64,9 +64,14 @@ def users():
 def check_lg():
     check_login_code=db.session.query(Login_code).first()
     if check_login_code is None:
-        exchand(404, True)
+        exchand(404, False)
     return {"detail":True}, status.HTTP_200_OK
 
+
+@router.get("/all_login_codes")
+def all_login_codes():
+    return [db.session.query(Login_code).all()]
+    
 
 @router.post("/create_login_code")
 def create_login_code(logincode:create_login_code_schema):
@@ -101,10 +106,6 @@ def delele_login_code(id:int):
     db.session.commit()
     return {"detail":"Login code and related teachers deleted"}
 
-
-@router.get("/logincode")
-def logincode():
-    return [db.session.query(Login_code).all()]
 
 @router.put("/update_login_code")
 def update_login_code(payload:update_login_code):
