@@ -68,14 +68,14 @@ def pdf_maker(items,exam):
     c=canvas.Canvas(f"static/{exam.login_code}_exam.pdf")
     c.setFont("Helvetica", 22)
     c.setFillColorRGB(0, 0, 255)
-    c.drawString(160,800, "Mugallymlaryn synag netijesi")
+    c.drawString(220,800, "Exam results")
     c.drawImage("images/logo.png", 0.3 * cm, 27 * cm, width=2.5 * cm, height=2.5 * cm)
     c.setFont("Helvetica", 12)
     c.setFillColorRGB(0, 0, 255)    
-    c.drawString(100,760, "T/b")
-    c.drawString(140,760, "Ady")
-    c.drawString(290,760, "Familiýasy")
-    c.drawString(440,760, "Baly")
+    c.drawString(100,760, "No")
+    c.drawString(140,760, "Name")
+    c.drawString(290,760, "Surname")
+    c.drawString(440,760, "Score")
     c.setFillColorRGB(0, 0, 0)    
     c.drawString(100,755,"_____________________________________________________________" )
     b1=740
@@ -102,17 +102,19 @@ def pdf_maker(items,exam):
         counter+=1
     c.setFont("Helvetica", 12)
     c.setFillColorRGB(0, 0, 0)
-    c.drawString(40,70, "Synag wagty")
+    c.drawString(40,70, "Exam login code")
+    c.drawString(40,50, exam.login_code)
+    c.drawString(185,70, "Exam duration")
     gelmesin1=check_login_code.expired_time.hour
     gelsin1=check_login_code.expired_time.minute
     if gelmesin1<10:
         gelmesin1=f'0{gelmesin1}'
     if gelsin1<10:
         gelsin1=f'0{gelsin1}'
-    c.drawString(50,50, f"{gelmesin1}:{gelsin1}")
-    c.drawString(250,70, "Sözler toplumy")
-    c.drawString(274,50, f"{check_login_code.word_box}")
-    c.drawString(460,70, "PDF ýüklenen wagty")
+    c.drawString(185,50, f"{gelmesin1}:{gelsin1}")
+    c.drawString(325,70, "Words group")
+    c.drawString(325,50, f"{check_login_code.word_box}")
+    c.drawString(460,70, "Downloaded time pdf")
     wagt=datetime.now()
     gelmesin=wagt.hour+5
     gelsin=wagt.minute
@@ -120,6 +122,6 @@ def pdf_maker(items,exam):
         gelmesin=f'0{gelmesin}'
     if gelsin<10:
         gelsin=f'0{gelsin}'
-    c.drawString(465,50, f"{wagt.day}.{wagt.month}.{wagt.year} / {gelmesin}:{gelsin}")
+    c.drawString(460,50, f"{wagt.day}.{wagt.month}.{wagt.year} / {gelmesin}:{gelsin}")
     c.save()
     return c._filename
