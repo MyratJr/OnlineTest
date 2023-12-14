@@ -134,6 +134,7 @@ def update_login_code(payload:update_login_code):
 
 @router.put("change_active/{id}/{status}")
 def change_active(id:int,status:bool):
+    print(1)
     check_login_code=db.session.query(Login_code).filter_by(id=id).first()
     check_login_code.is_active=status
     return status
