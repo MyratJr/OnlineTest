@@ -70,7 +70,7 @@ def check_lg():
 
 @router.get("/all_login_codes")
 def all_login_codes(request:Request):
-    print(request.client.host)
+    print(request.headers.get("X-Forwarded-For"))
     return db.session.query(Login_code).all()
     
 
