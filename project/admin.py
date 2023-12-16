@@ -161,7 +161,7 @@ def each_exam_teachers(id:int):
     if login_code1 is not None:
         get_teachers=db.session.query(Students).filter_by(login_code=login_code1.login_code).all()
         for i in get_teachers:
-            i.hour=i.registered_time.hour
+            i.hour=i.registered_time.hour+5
             i.minute=i.registered_time.minute
             i.second=i.registered_time.second
         return get_teachers
