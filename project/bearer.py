@@ -6,6 +6,7 @@ from datetime import datetime,timedelta
 from passlib.context import CryptContext
 from fastapi import HTTPException, Request
 import jwt
+from jwt import encode
 from dotenv import load_dotenv
 from .models import Login_code
 
@@ -56,7 +57,7 @@ def create_access_token(data:dict,expires_delta:timedelta):
     to_encode=data.copy()
     expire=datetime.utcnow()+expires_delta
     to_encode.update({'exp':expire})
-    encoded_jwt=jwt.encode(to_encode, os.environ['JWT_SECRET_KEY'], os.environ['ALGORITHM'])
+    encoded_jwt=encode(to_encode, os.environ['JWT_SECRET_KEY'], os.environ['ALGORITHM'])
     return "Bearer "+encoded_jwt
 
 
