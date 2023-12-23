@@ -9,21 +9,19 @@ import socket
 from typing import List
 
 
-
 ip_address = socket.gethostbyname(socket.gethostname())
 
 
-router=APIRouter(prefix="/admin")
+router=APIRouter(prefix="/admin", tags=["admin ALL"])
 
 
-@router.post("/signup",response_model=Admin_Add_Schema)
+@router.post("/signup",response_model=List[Admin_Show_Schema_Id], tags=["admin POST"])
 def signup(user:Admin_Show_Schema):
     existing_user =db.session.query(Admin).filter_by(username=user.username).first()
     if existing_user:
         exchand(409,"Username already taken")
     else:
         new_user=Admin(
-            id=user.id, 
             username=user.username, 
             hashed_password=hash_password(user.password),
             is_active=user.is_active,
@@ -31,36 +29,41 @@ def signup(user:Admin_Show_Schema):
         )
         db.session.add(new_user)
         db.session.commit()
-        return user
+        return db.session.query(Admin).all()
 
 
-@router.post("/token")
-def login(response:Response,data:login_,is_logged:bool=Depends(is_logged_in)):
-    if is_logged:
-        exchand(403,"You are already logged in. Please log out before logging in again.")
+@router.post("/token", tags=["admin POST"])
+def login(data:login_):
     user=db.session.query(Admin).filter_by(username=data.username).first()
     if user is None:
         exchand(401,"Incorrect username")
+    if not user.is_active:
+        exchand(401, "You have been denied access to login by the superuser")
     if verify_password_(data.password,user):
-        access_token=create_access_token(response,data={"sub":data.username},expires_delta=timedelta(hours=10))
-        return {"access_token":access_token, "token_type":"bearer"}
+        access_token=create_access_token(data={"sub":data.username},expires_delta=timedelta(days=30))
+        return {
+            "id":user.id,
+            "username":user.username,
+            "is_superuser":user.is_superuser,
+            "access_token":access_token,
+        }
     else:
         exchand(401,"Incorrect password")
     
 
-@router.get("/logout")
+@router.get("/logout", tags=["admin GET"])
 def logout(response:Response):
     response.set_cookie(key="Authorization", value="",expires=0)
     return {"message": "Token deleted successfully"}
 
 
-@router.get("/users",response_model=List[Admin_Add_Schema])
+@router.get("/users",response_model=List[Admin_Add_Schema], tags=["admin GET"])
 def users():
     all_users_get=db.session.query(Admin).all()
     return all_users_get
 
 
-@router.get("/check_lg")
+@router.get("/check_lg", tags=["admin GET"])
 def check_lg():
     check_login_code=db.session.query(Login_code).first()
     if check_login_code is None:
@@ -68,12 +71,12 @@ def check_lg():
     return {"detail":True}, status.HTTP_200_OK
 
 
-@router.get("/all_login_codes")
+@router.get("/all_login_codes", tags=["admin GET"])
 def all_login_codes():
     return db.session.query(Login_code).all()
     
 
-@router.post("/create_login_code")
+@router.post("/create_login_code", tags=["admin POST"])
 def create_login_code(logincode:create_login_code_schema):
     check_login_code=db.session.query(Login_code).filter_by(login_code=logincode.login_code).first()
     if check_login_code is None:
@@ -94,7 +97,7 @@ def create_login_code(logincode:create_login_code_schema):
     exchand(400, f"You have a login code with '{logincode.login_code}' before.")
 
 
-@router.delete("/delete_login_code/{id}")
+@router.delete("/delete_login_code/{id}", tags=["admin DELETE"])
 def delele_login_code(id:int):
     check_login_code=db.session.query(Login_code).filter_by(id=id).first()
     if check_login_code is None:
@@ -107,7 +110,7 @@ def delele_login_code(id:int):
     return {"detail":"Login code and related teachers deleted"}
 
 
-@router.put("/update_login_code")
+@router.put("/update_login_code", tags=["admin PUT"])
 def update_login_code_(payload:update_login_code):
     check_login_code=db.session.query(Login_code).filter_by(id=payload.id).first()
     if check_login_code is None:
@@ -120,20 +123,20 @@ def update_login_code_(payload:update_login_code):
     return payload
 
 
-@router.put("/change_active/{id}/{status}")
+@router.put("/change_active/{id}/{status}", tags=["admin PUT"])
 def change_active(id:int,status:bool):
     check_login_code=db.session.query(Login_code).filter_by(id=id).first()
     check_login_code.is_active=status
     db.session.commit()
     return status
 
-@router.get("/results",response_model=List[Teachers_result])
+@router.get("/results",response_model=List[Teachers_result], tags=["admin GET"])
 def results():
     all_users_get=db.session.query(Students).all()
     return all_users_get
 
 
-@router.get("/get_result_pdf/{id}")
+@router.get("/get_result_pdf/{id}", tags=["admin GET"])
 def get_result_pdf(id:int):
     exam=db.session.query(Login_code).filter_by(id=id).first()
     if exam is not None:
@@ -145,7 +148,7 @@ def get_result_pdf(id:int):
     exchand(404, "No exam found")
 
 
-@router.delete("/delete_user/{id}")
+@router.delete("/delete_user/{id}", tags=["admin DELETE"])
 def deleteuser(id:int):
     update_score=db.session.query(Students).filter_by(id=id).first()
     if update_score is None:
@@ -155,7 +158,7 @@ def deleteuser(id:int):
     return {"detail":"Teacher deleted"}
 
 
-@router.get("/e_e_t/{id}")
+@router.get("/e_e_t/{id}", tags=["admin GET"])
 def each_exam_teachers(id:int):
     login_code1=db.session.query(Login_code).filter_by(id=id).first()
     if login_code1 is not None:

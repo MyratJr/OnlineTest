@@ -4,7 +4,7 @@ from fastapi_sqlalchemy import db
 from .models import Students, Login_code
 from datetime import datetime
 
-router=APIRouter(prefix="/user")
+router=APIRouter(prefix="/user", tags=["User"])
 
 
 @router.post("/enter_to_test")

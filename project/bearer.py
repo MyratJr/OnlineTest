@@ -24,27 +24,27 @@ def hash_password(password):
     return password_context.hash(password)
 
 
-def get_username_from_token(token):
-    try:
-        decoded_token = jwt.decode(token,os.environ['JWT_SECRET_KEY'], os.environ['ALGORITHM'])
-        username = decoded_token["sub"]
-        return username
-    except jwt.exceptions.DecodeError:
-        return exchand(401,"Invalid token")
-    except jwt.exceptions.ExpiredSignatureError:
-        return exchand(401,"Token has expired")
+# def get_username_from_token(token):
+#     try:
+#         decoded_token = jwt.decode(token,os.environ['JWT_SECRET_KEY'], os.environ['ALGORITHM'])
+#         username = decoded_token["sub"]
+#         return username
+#     except jwt.exceptions.DecodeError:
+#         return exchand(401,"Invalid token")
+#     except jwt.exceptions.ExpiredSignatureError:
+#         return exchand(401,"Token has expired")
 
 
-def is_logged_in(request:Request):
-    authorization = request.cookies.get("Authorization")
-    if authorization:
-        if authorization.startswith("Bearer "):
-            token = authorization.split("Bearer ")[1]
-            return(get_username_from_token(token))
-        else:
-            return exchand(401,"Unknown token")
-    else:
-        return False
+# def is_logged_in(request:Request):
+#     authorization = request.cookies.get("Authorization")
+#     if authorization:
+#         if authorization.startswith("Bearer "):
+#             token = authorization.split("Bearer ")[1]
+#             return(get_username_from_token(token))
+#         else:
+#             return exchand(401,"Unknown token")
+#     else:
+#         return False
 
 
 def verify_password_(password,user):

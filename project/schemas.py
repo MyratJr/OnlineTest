@@ -2,8 +2,8 @@ from pydantic import BaseModel, create_model
 from  datetime import time
 from .models import Login_code
 
+
 class Admin_Add_Schema(BaseModel):
-    id:int
     username:str
     is_active:bool
     is_superuser:bool
@@ -13,9 +13,15 @@ class Admin_Show_Schema(Admin_Add_Schema):
     password:str
 
 
+class Admin_Show_Schema_Id(Admin_Add_Schema):
+    id:int
+
+
 class login_(BaseModel):
     username:str
     password:str
+    is_superuser:bool
+    is_active:bool
 
 
 class create_login_code_schema(BaseModel):

@@ -6,7 +6,7 @@ from fastapi_sqlalchemy import DBSessionMiddleware
 from dotenv import load_dotenv
 from fastapi.staticfiles import StaticFiles
 
-app=FastAPI()
+app=FastAPI(title="ETUT QUIZ")
 
 
 app.include_router(admin_router)
