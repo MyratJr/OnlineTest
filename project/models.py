@@ -9,6 +9,8 @@ class Admin(Base):
     __tablename__ = "admin"
     id = Column(Integer, primary_key=True,autoincrement=True)
     username = Column(String, nullable=False)
+    name = Column(String, nullable=False, server_default="user")
+    surname = Column(String, nullable=False, server_default="userow")
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
     is_superuser = Column(Boolean, default=False, nullable=False)
