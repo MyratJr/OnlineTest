@@ -1,5 +1,5 @@
 from datetime import timedelta
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter,  Response, status
 from .schemas import *
 from fastapi.responses import JSONResponse
 from fastapi_sqlalchemy import db
@@ -33,7 +33,7 @@ def signup(user:Admin_Show_Schema):
 
 
 @router.post("/token", tags=["admin POST"])
-def login(data:login_):
+def login(data:login_1):
     user=db.session.query(Admin).filter_by(username=data.username).first()
     if user is None:
         exchand(401,"Incorrect username")
@@ -50,6 +50,17 @@ def login(data:login_):
     else:
         exchand(401,"Incorrect password")
     
+
+@router.get("/check_token",response_model=Admin_Add_Schema)
+def check_token(schema:Check_token_schema):
+    if schema.token:
+        user=is_logged_in(schema.token)
+        if user:
+            user1=db.session.query(Admin).filter_by(username=user).first()
+            if user1:
+                return user1
+    return exchand(404, "Invalid token")
+
 
 @router.get("/logout", tags=["admin GET"])
 def logout(response:Response):
@@ -132,7 +143,7 @@ def change_active(id:int,status:bool):
 
 @router.get("/results",response_model=List[Teachers_result], tags=["admin GET"])
 def results():
-    all_users_get=db.session.query(Students).all()
+    all_users_get=db.session.query(Students).order_by(Students.score.desc()).all()
     return all_users_get
 
 

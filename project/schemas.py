@@ -17,11 +17,9 @@ class Admin_Show_Schema_Id(Admin_Add_Schema):
     id:int
 
 
-class login_(BaseModel):
+class login_1(BaseModel):
     username:str
     password:str
-    is_superuser:bool
-    is_active:bool
 
 
 class create_login_code_schema(BaseModel):
@@ -46,6 +44,7 @@ class enter_to_test(BaseModel):
 class accept_score_schema(BaseModel):
     id:int
     score:int
+    box:int
 
 
 class Teachers_result(BaseModel):
@@ -53,3 +52,7 @@ class Teachers_result(BaseModel):
     name:str
     surname:str
     score:int
+
+
+class Check_token_schema(BaseModel):
+    token : str
