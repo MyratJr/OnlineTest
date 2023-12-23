@@ -143,7 +143,7 @@ def change_active(id:int,status:bool):
 
 @router.get("/results",response_model=List[Teachers_result], tags=["admin GET"])
 def results():
-    all_users_get=db.session.query(Students).order_by(Students.score.desc()).all()
+    all_users_get=db.session.query(Students).order_by(Students.score).all()
     return all_users_get
 
 
