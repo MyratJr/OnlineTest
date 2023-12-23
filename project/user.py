@@ -13,7 +13,7 @@ router=APIRouter(prefix="/user", tags=["User"])
 def enter_to_test(user_schema:enter_to_test):
     check_login_code=db.session.query(Login_code).filter_by(login_code=user_schema.login_code).first()
     if check_login_code and check_login_code.is_active:
-        user2 = db.session.query(Students).filter_by(name=user_schema.name).first()
+        user2 = db.session.query(Students).filter_by(name=user_schema.name, surname=user_schema.surname).first()
         if not user2 or user2.login_code != check_login_code.login_code:
             new_teacher=Students(
                 name=user_schema.name,
@@ -30,7 +30,7 @@ def enter_to_test(user_schema:enter_to_test):
                 "word_box":check_login_code.word_box
             }
         else:
-            exchand(403, "U have completed the quiz before. Wait to next quiz.")
+            exchand(403, "U have completed this exam.")
     else:
         raise HTTPException(status_code=404,detail="No exam found with this logincode")
 
