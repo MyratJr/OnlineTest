@@ -143,7 +143,7 @@ def change_active(id:int,status:bool):
 
 @router.get("/results",response_model=List[Teachers_result], tags=["admin GET"])
 def results():
-    all_users_get=db.session.query(Students).order_by(Students.score).all()
+    all_users_get=db.session.query(Students).all()
     return all_users_get
 
 
@@ -173,7 +173,7 @@ def deleteuser(id:int):
 def each_exam_teachers(id:int):
     login_code1=db.session.query(Login_code).filter_by(id=id).first()
     if login_code1 is not None:
-        get_teachers=db.session.query(Students).filter_by(login_code=login_code1.login_code).all()
+        get_teachers=db.session.query(Students).filter_by(login_code=login_code1.login_code).order_by(Students.score.desc()).all()
         for i in get_teachers:
             i.hour=i.registered_time.hour+5
             i.minute=i.registered_time.minute
