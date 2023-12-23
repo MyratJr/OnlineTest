@@ -51,7 +51,7 @@ def login(data:login_1):
         exchand(401,"Incorrect password")
     
 
-@router.get("/check_token",response_model=Admin_Add_Schema)
+@router.post("/check_token",response_model=Admin_Add_Schema)
 def check_token(schema:Check_token_schema):
     if schema.token:
         user=is_logged_in(schema.token)
