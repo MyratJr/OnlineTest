@@ -51,18 +51,34 @@ def login(data:login_1):
         }
     else:
         exchand(401,"Incorrect password")
-    
+
+
+@router.get("/users",response_model=List[Admin_Show_Schema_Id], tags=["admin GET"])
+def users():
+    all_users_get=db.session.query(Admin).all()
+    return all_users_get
+
+
+@router.delete("/delete_user/{id}")
+def delete_user(id:int):
+    user=db.session.query(Admin).filter_by(id=id).first()
+    if user is None:
+        exchand(404, "admin not found")
+    db.session.delete(user)
+    db.session.commit()
+    return {"success"}
+
 
 @router.put("/change")
-def change_admin(name:str, surname:str, old_name:str):
-    user=db.session.query(Admin).filter_by(username=old_name).first()
-    user.name=name
-    user.surname=surname
+def change_admin(schema:Admin_Show_Schema_Id):
+    user=db.session.query(Admin).filter_by(username=schema.id).first()
+    user.username=schema.username
+    user.name=schema.name
+    user.surname=schema.surname
+    user.is_active=schema.is_active
+    user.is_superuser=schema.is_superuser
     db.session.commit()
     return "success"
-
-
-
 
 
 @router.post("/check_token",response_model=Admin_Add_Schema)
@@ -80,12 +96,6 @@ def check_token(schema:Check_token_schema):
 def logout(response:Response):
     response.set_cookie(key="Authorization", value="",expires=0)
     return {"message": "Token deleted successfully"}
-
-
-@router.get("/users",response_model=List[Admin_Add_Schema], tags=["admin GET"])
-def users():
-    all_users_get=db.session.query(Admin).all()
-    return all_users_get
 
 
 @router.get("/check_lg", tags=["admin GET"])
