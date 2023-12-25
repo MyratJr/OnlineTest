@@ -15,7 +15,7 @@ ip_address = socket.gethostbyname(socket.gethostname())
 router=APIRouter(prefix="/admin", tags=["admin ALL"])
 
 
-@router.post("/signup",response_model=List[Admin_Show_Schema_Id], tags=["admin POST"])
+@router.post("/signup",response_model=Admin_Show_Schema_Id, tags=["admin POST"])
 def signup(user:Admin_Show_Schema):
     existing_user =db.session.query(Admin).filter_by(username=user.username).first()
     if existing_user:
@@ -31,7 +31,7 @@ def signup(user:Admin_Show_Schema):
         )
         db.session.add(new_user)
         db.session.commit()
-        return db.session.query(Admin).all()
+        return new_user
 
 
 @router.post("/token", tags=["admin POST"])
@@ -60,6 +60,8 @@ def change_admin(name:str, surname:str, old_name:str):
     user.surname=surname
     db.session.commit()
     return "success"
+
+
 
 
 
