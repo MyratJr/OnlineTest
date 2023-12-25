@@ -23,6 +23,8 @@ def signup(user:Admin_Show_Schema):
     else:
         new_user=Admin(
             username=user.username, 
+            name=user.firstname, 
+            surname=user.surname, 
             hashed_password=hash_password(user.password),
             is_active=user.is_active,
             is_superuser=user.is_superuser

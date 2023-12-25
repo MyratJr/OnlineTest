@@ -5,6 +5,8 @@ from .models import Login_code
 
 class Admin_Add_Schema(BaseModel):
     username:str
+    firstname:str
+    surname:str
     is_active:bool
     is_superuser:bool
 
