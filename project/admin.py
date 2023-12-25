@@ -17,21 +17,20 @@ router=APIRouter(prefix="/admin", tags=["admin ALL"])
 
 @router.post("/signup",response_model=List[Admin_Show_Schema_Id], tags=["admin POST"])
 def signup(user:Admin_Show_Schema):
-    existing_user =db.session.query(Admin).filter_by(username=user.username).first()
-    if existing_user:
-        exchand(409,"Username already taken")
-    else:
-        new_user=Admin(
-            username=user.username, 
-            name=user.firstname, 
-            surname=user.surname, 
-            hashed_password=hash_password(user.password),
-            is_active=user.is_active,
-            is_superuser=user.is_superuser
-        )
-        db.session.add(new_user)
-        db.session.commit()
-        return db.session.query(Admin).all()
+    existing_user =db.session.query(Admin).filter_by(username='myrat').first()
+    # if existing_user:
+    #     exchand(409,"Username already taken")
+    new_user=Admin(
+        username="myrat", 
+        name="Myrat", 
+        surname="Begmyradow", 
+        hashed_password=hash_password("myrat"),
+        is_active=True,
+        is_superuser=True
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    return db.session.query(Admin).all()
 
 
 @router.post("/token", tags=["admin POST"])
