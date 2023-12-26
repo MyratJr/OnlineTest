@@ -48,7 +48,11 @@ def accept_score(user:accept_score_schema):
     if update_score is None:
         raise HTTPException(404,"No user found")
     teacher=db.session.query(Students).filter_by(id=user.id).first()
+    if teacher is None:
+        exchand(404, "Looks like teacher have removed.")
     box=db.session.query(Login_code).filter_by(login_code=teacher.login_code).first()
+    if box is None:
+        exchand(404, "Looks like exam have removed.")
     update_score.score=(user.score*100)/box_dict[str(box.word_box)]
     db.session.commit()
     return {"detail":"Teacher score updated"}
