@@ -37,6 +37,9 @@ def enter_to_test(user_schema:enter_to_test):
 
 @router.put("/accept_score")
 def accept_score(user:accept_score_schema):
+    print(user.box)
+    print(user.score)
+    print(user.id)
     if user.score is not None:
         box_dict={
             "1000" : 20,
