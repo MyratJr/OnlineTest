@@ -37,17 +37,19 @@ def enter_to_test(user_schema:enter_to_test):
 
 @router.put("/accept_score")
 def accept_score(user:accept_score_schema):
-    print(user.score)
-    box_dict={
-        "1000" : 20,
-        "2000" : 40,
-        "3000" : 60,
-        "4000" : 80,
-        "5000" : 100
-    }
-    update_score=db.session.query(Students).filter_by(id=user.id).first()
-    if update_score is None:
-        raise HTTPException(404,"No user found")
-    update_score.score=(user.score*100)/box_dict[str(user.box)]
-    db.session.commit()
-    return {"detail":"Teacher score updated"}
+    if user.score is not None:
+        box_dict={
+            "1000" : 20,
+            "2000" : 40,
+            "3000" : 60,
+            "4000" : 80,
+            "5000" : 100
+        }
+        update_score=db.session.query(Students).filter_by(id=user.id).first()
+        if update_score is None:
+            raise HTTPException(404,"No user found")
+        update_score.score=(user.score*100)/box_dict[str(user.box)]
+        db.session.commit()
+        return {"detail":"Teacher score updated"}
+    else:
+        return {"detail":"No score"}
