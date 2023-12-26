@@ -59,7 +59,7 @@ def users():
     return all_users_get
 
 
-@router.delete("/delete_user/{id}")
+@router.delete("/delete_admin/{id}")
 def delete_user(id:int):
     user=db.session.query(Admin).filter_by(id=id).first()
     if user is None:
