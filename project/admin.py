@@ -137,7 +137,7 @@ def create_login_code(logincode:create_login_code_schema):
 def delele_login_code(id:int):
     check_login_code=db.session.query(Login_code).filter_by(id=id).first()
     if check_login_code is None:
-        exchand(404, "No login code found")
+        exchand(403, "No login code found")
     get_teachers=db.session.query(Students).filter_by(login_code=check_login_code.login_code)
     for i in get_teachers:
         db.session.delete(i)
