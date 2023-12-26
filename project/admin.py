@@ -187,7 +187,7 @@ def get_result_pdf(id:int):
 @router.delete("/delete_user/{id}", tags=["admin DELETE"])
 def deleteuser(id:int):
     update_score=db.session.query(Students).filter_by(id=id).first()
-    print(update_score.login_code)
+    print(update_score.name)
     if update_score is None:
         exchand(401, "No user found")
     db.session.delete(update_score)
