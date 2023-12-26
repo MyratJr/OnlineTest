@@ -69,16 +69,17 @@ def delete_user(id:int):
     return {"success"}
 
 
-@router.put("/change")
-def change_admin(schema:Admin_Show_Schema_Id):
-    user=db.session.query(Admin).filter_by(username=schema.id).first()
+@router.put("/change/{id}", response_model=Admin_Show_Schema_Id)
+def change_admin(schema:Admin_Show_Schema, id:int):
+    user=db.session.query(Admin).filter_by(username=id).first()
     user.username=schema.username
     user.name=schema.name
     user.surname=schema.surname
     user.is_active=schema.is_active
     user.is_superuser=schema.is_superuser
+    user.hashed_password=hash_password(schema.password),
     db.session.commit()
-    return "success"
+    return user
 
 
 @router.post("/check_token",response_model=Admin_Add_Schema)
