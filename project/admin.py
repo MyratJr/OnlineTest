@@ -1,5 +1,5 @@
-from datetime import timedelta
-from fastapi import APIRouter,  Response, status
+from datetime import timedelta, time
+from fastapi import APIRouter, Response, status
 from .schemas import *
 from fastapi.responses import JSONResponse
 from fastapi_sqlalchemy import db
@@ -17,21 +17,24 @@ router=APIRouter(prefix="/admin", tags=["admin ALL"])
 
 @router.post("/signup",response_model=Admin_Show_Schema_Id, tags=["admin POST"])
 def signup(user:Admin_Show_Schema):
-    existing_user =db.session.query(Admin).filter_by(username=user.username).first()
-    if existing_user:
-        exchand(409,"Username already taken")
-    else:
-        new_user=Admin(
-            username=user.username, 
-            name=user.name, 
-            surname=user.surname, 
-            hashed_password=hash_password(user.password),
-            is_active=user.is_active,
-            is_superuser=user.is_superuser
-        )
-        db.session.add(new_user)
-        db.session.commit()
-        return new_user
+    admin_is_super_user = db.session.query(Admin).filter_by(id=user.admin_id).first()
+    if admin_is_super_user.is_superuser is True:
+        existing_user =db.session.query(Admin).filter_by(username=user.username).first()
+        if existing_user:
+            exchand(409,"Username already taken")
+        else:
+            new_user=Admin(
+                username=user.username, 
+                name=user.name, 
+                surname=user.surname, 
+                hashed_password=hash_password(user.password),
+                is_active=user.is_active,
+                is_superuser=user.is_superuser
+            )
+            db.session.add(new_user)
+            db.session.commit()
+            return new_user
+    exchand(401, "Unauthorized")
 
 
 @router.post("/token", tags=["admin POST"])
@@ -82,7 +85,7 @@ def change_admin(schema:Admin_Show_Schema, id:int):
     return user
 
 
-@router.post("/check_token",response_model=Admin_Add_Schema)
+@router.post("/check_token",response_model=Admin_Show_Schema_Id)
 def check_token(schema:Check_token_schema):
     if schema.token:
         user=is_logged_in(schema.token)
@@ -90,6 +93,7 @@ def check_token(schema:Check_token_schema):
             user1=db.session.query(Admin).filter_by(username=user).first()
             if user1:
                 return user1
+            return exchand(404, "No user found")
     return exchand(404, "Invalid token")
 
 
@@ -107,9 +111,12 @@ def check_lg():
     return {"detail":True}, status.HTTP_200_OK
 
 
-@router.get("/all_login_codes", tags=["admin GET"])
-def all_login_codes():
-    return db.session.query(Login_code).all()
+@router.get("/all_login_codes/{admin_id}", tags=["admin GET"])
+def all_login_codes(admin_id:int):
+    admin_is_super_user = db.session.query(Admin).filter_by(id=admin_id).first()
+    if admin_is_super_user.is_superuser is True:
+        return db.session.query(Login_code).all()
+    return db.session.query(Login_code).filter_by(created_admin=admin_id).first()
     
 
 @router.post("/create_login_code", tags=["admin POST"])
@@ -119,6 +126,7 @@ def create_login_code(logincode:create_login_code_schema):
         exam_time=time(logincode.hour,logincode.minute)
         new_login_code=Login_code(
             login_code=logincode.login_code, 
+            created_admin=logincode.admin_id, 
             expired_time=exam_time, 
             word_box=logincode.word_group,
             is_active=logincode.is_active)

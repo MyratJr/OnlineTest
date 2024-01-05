@@ -1,6 +1,4 @@
 from pydantic import BaseModel, create_model
-from  datetime import time
-from .models import Login_code
 
 
 class Admin_Add_Schema(BaseModel):
@@ -12,7 +10,8 @@ class Admin_Add_Schema(BaseModel):
 
 
 class Admin_Show_Schema(Admin_Add_Schema):
-    password:str
+    admin_id : int
+    password : str
 
 
 class Admin_Show_Schema_Id(Admin_Add_Schema):
@@ -25,6 +24,7 @@ class login_1(BaseModel):
 
 
 class create_login_code_schema(BaseModel):
+    admin_id : int
     login_code:str
     word_group:int
     hour:int

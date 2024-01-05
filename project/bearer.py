@@ -1,14 +1,12 @@
-from fastapi_sqlalchemy import db
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import cm
 import os
 from datetime import datetime,timedelta
 from passlib.context import CryptContext
-from fastapi import HTTPException, Request
+from fastapi import HTTPException
 import jwt
 from jwt import encode
 from dotenv import load_dotenv
-from .models import Login_code
 
 
 load_dotenv('.env')
@@ -59,6 +57,10 @@ def create_access_token(data:dict,expires_delta:timedelta):
     to_encode.update({'exp':expire})
     encoded_jwt=encode(to_encode, os.environ['JWT_SECRET_KEY'], os.environ['ALGORITHM'])
     return "Bearer "+encoded_jwt
+
+
+def admin_is_super_user():
+    ...
 
 
 def pdf_maker(items,exam):

@@ -9,11 +9,11 @@ class Admin(Base):
     __tablename__ = "admin"
     id = Column(Integer, primary_key=True,autoincrement=True)
     username = Column(String, nullable=False)
-    name = Column(String, nullable=False, server_default="user")
-    surname = Column(String, nullable=False, server_default="userow")
+    name = Column(String, nullable=False)
+    surname = Column(String, nullable=False)
     hashed_password = Column(String, nullable=False)
-    is_active = Column(Boolean, default=True, nullable=False)
-    is_superuser = Column(Boolean, default=False, nullable=False)
+    is_active = Column(Boolean, nullable=False)
+    is_superuser = Column(Boolean, nullable=False)
 
 
 class Students(Base):
@@ -21,15 +21,16 @@ class Students(Base):
     id = Column(Integer, primary_key=True,autoincrement=True)
     name = Column(String, nullable=False)
     surname = Column(String, nullable=False)
-    login_code=Column(String,default=0)
+    login_code=Column(String)
     score=Column(Integer)
-    registered_time=Column(Time, default=time(13, 00))
+    registered_time=Column(Time)
 
 
 class Login_code(Base):
     __tablename__="login_code"
     id = Column(Integer, primary_key=True,autoincrement=True)
     login_code=Column(String,nullable=False)
+    created_admin = Column(Integer, nullable=False)
     expired_time=Column(Time,nullable=False)
     word_box=Column(Integer,nullable=False)
-    is_active=Column(Boolean, default=False)
+    is_active=Column(Boolean)
