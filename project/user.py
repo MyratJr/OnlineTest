@@ -53,5 +53,3 @@ def accept_score(user:accept_score_schema):
     teacher.score=(user.score*100)/box_dict[str(box.word_box)]
     db.session.commit()
     return {"detail":"Teacher score updated"}
-
-    
