@@ -17,24 +17,21 @@ router=APIRouter(prefix="/admin", tags=["admin ALL"])
 
 @router.post("/signup",response_model=Admin_Show_Schema_Id, tags=["admin POST"])
 def signup(user:Admin_Show_Schema):
-    admin_is_super_user = db.session.query(Admin).filter_by(id=user.admin_id).first()
-    if admin_is_super_user.is_superuser is True:
-        existing_user =db.session.query(Admin).filter_by(username=user.username).first()
-        if existing_user:
-            exchand(409,"Username already taken")
-        else:
-            new_user=Admin(
-                username=user.username, 
-                name=user.name, 
-                surname=user.surname, 
-                hashed_password=hash_password(user.password),
-                is_active=user.is_active,
-                is_superuser=user.is_superuser
-            )
-            db.session.add(new_user)
-            db.session.commit()
-            return new_user
-    exchand(401, "Unauthorized")
+    existing_user =db.session.query(Admin).filter_by(username=user.username).first()
+    if existing_user:
+        exchand(409,"Username already taken")
+    else:
+        new_user=Admin(
+            username=user.username, 
+            name=user.name, 
+            surname=user.surname, 
+            hashed_password=hash_password(user.password),
+            is_active=user.is_active,
+            is_superuser=user.is_superuser
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        return new_user
 
 
 @router.post("/token", tags=["admin POST"])
@@ -67,6 +64,10 @@ def delete_user(id:int):
     user=db.session.query(Admin).filter_by(id=id).first()
     if user is None:
         exchand(404, "admin not found")
+    for i in db.session.query(Login_code).filter_by(created_admin=id).all():
+        for j in db.session.query(Students).filter_by(login_code=i.login_code).all():
+            db.session.delete(j)
+        db.session.delete(i)
     db.session.delete(user)
     db.session.commit()
     return {"success"}
@@ -178,6 +179,7 @@ def change_active(id:int,status:bool):
 def results():
     all_users_get=db.session.query(Students).all()
     return all_users_get
+
 
 
 @router.get("/get_result_pdf/{id}", tags=["admin GET"])

@@ -10,7 +10,6 @@ class Admin_Add_Schema(BaseModel):
 
 
 class Admin_Show_Schema(Admin_Add_Schema):
-    admin_id : int
     password : str
 
 
