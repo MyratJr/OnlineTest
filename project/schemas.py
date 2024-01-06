@@ -13,8 +13,9 @@ class Admin_Show_Schema(Admin_Add_Schema):
     password : str
 
 
-class change_password(Admin_Show_Schema):
+class change_password(BaseModel):
     id:int
+    password:str
 
 
 class Admin_Show_Schema_Id(Admin_Add_Schema):
