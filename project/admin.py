@@ -109,7 +109,7 @@ def all_login_codes(admin_id:int):
     admin_is_super_user = db.session.query(Admin).filter_by(id=admin_id).first()
     if admin_is_super_user.is_superuser is True:
         return db.session.query(Login_code).all()
-    return db.session.query(Login_code).filter_by(created_admin=admin_id).first()
+    return db.session.query(Login_code).filter_by(created_admin=admin_id).all()
     
 
 @router.post("/create_login_code", tags=["admin POST"])
