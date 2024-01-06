@@ -74,14 +74,13 @@ def delete_user(id:int):
 
 
 @router.put("/change/{id}", response_model=Admin_Show_Schema_Id)
-def change_admin(schema:Admin_Show_Schema, id:int):
+def change_admin(schema:Admin_Show_Schema_Id, id:int):
     user=db.session.query(Admin).filter_by(username=id).first()
     user.username=schema.username
     user.name=schema.name
     user.surname=schema.surname
     user.is_active=schema.is_active
     user.is_superuser=schema.is_superuser
-    user.hashed_password=hash_password(schema.password),
     db.session.commit()
     return user
 
@@ -96,20 +95,6 @@ def check_token(schema:Check_token_schema):
                 return user1
             return exchand(404, "No user found")
     return exchand(404, "Invalid token")
-
-
-@router.get("/logout", tags=["admin GET"])
-def logout(response:Response):
-    response.set_cookie(key="Authorization", value="",expires=0)
-    return {"message": "Token deleted successfully"}
-
-
-@router.get("/check_lg", tags=["admin GET"])
-def check_lg():
-    check_login_code=db.session.query(Login_code).first()
-    if check_login_code is None:
-        exchand(404, False)
-    return {"detail":True}, status.HTTP_200_OK
 
 
 @router.get("/all_login_codes/{admin_id}", tags=["admin GET"])
@@ -147,7 +132,7 @@ def delele_login_code(id:int):
     check_login_code=db.session.query(Login_code).filter_by(id=id).first()
     if check_login_code is None:
         exchand(404, "No login code found")
-    get_teachers=db.session.query(Students).filter_by(login_code=check_login_code.login_code)
+    get_teachers=db.session.query(Students).filter_by(login_code=check_login_code.login_code).all()
     for i in get_teachers:
         db.session.delete(i)
     db.session.delete(check_login_code)
