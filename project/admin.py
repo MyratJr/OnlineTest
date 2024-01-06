@@ -85,10 +85,10 @@ def change_admin(schema:Admin_Show_Schema_Id):
     return user
 
 
-@router.put("/change_password/{id}")
-def change_password(password:str, id:int):
-    user=db.session.query(Admin).filter_by(id=id).first()
-    user.hashed_password=hash_password(password)
+@router.put("/change_password")
+def change_password(schema:change_password):
+    user=db.session.query(Admin).filter_by(id=schema.id).first()
+    user.hashed_password = hash_password(schema.password)
     db.session.commit()
     return {"success"}
 

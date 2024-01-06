@@ -13,6 +13,10 @@ class Admin_Show_Schema(Admin_Add_Schema):
     password : str
 
 
+class change_password(Admin_Show_Schema):
+    id:int
+
+
 class Admin_Show_Schema_Id(Admin_Add_Schema):
     id:int
 
