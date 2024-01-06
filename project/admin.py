@@ -76,8 +76,6 @@ def delete_user(id:int):
 @router.put("/change", response_model=Admin_Show_Schema_Id)
 def change_admin(schema:Admin_Show_Schema_Id):
     user=db.session.query(Admin).filter_by(id=schema.id).first()
-    if user is None:
-        print('salam myrat')
     user.username=schema.username
     user.name=schema.name
     user.surname=schema.surname
