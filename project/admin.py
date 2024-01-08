@@ -101,6 +101,8 @@ def check_token(schema:Check_token_schema):
         if user:
             user1=db.session.query(Admin).filter_by(username=user).first()
             if user1:
+                if user1.is_active is False:
+                    return exchand(404, "No user found")
                 return user1
             return exchand(404, "No user found")
     return exchand(404, "Invalid token")
