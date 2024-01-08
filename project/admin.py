@@ -94,7 +94,7 @@ def change_password(schema:change_password):
 
 @router.post("/check_token",response_model=Admin_Show_Schema_Id)
 def check_token(schema:Check_token_schema):
-    print(schema.token)
+    # print(schema.token)
     if schema.token:
         user=is_logged_in(schema.token)
         if user:
@@ -102,7 +102,7 @@ def check_token(schema:Check_token_schema):
             if user1:
                 return user1
             return exchand(404, "No user found")
-    return exchand(404, "Invalid token")
+    # return exchand(404, "Invalid token")
 
 
 @router.get("/all_login_codes/{admin_id}", tags=["admin GET"])
