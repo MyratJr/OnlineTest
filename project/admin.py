@@ -94,6 +94,7 @@ def change_password(schema:change_password):
 
 @router.post("/check_token",response_model=Admin_Show_Schema_Id)
 def check_token(schema:Check_token_schema):
+    print(schema.token)
     if schema.token:
         user=is_logged_in(schema.token)
         if user:
